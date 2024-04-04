@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Admin;
+use App\Models\Restaurant;
+
 return [
 
     /*
@@ -14,8 +17,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'restaurant',
+        'passwords' => 'restaurants',
     ],
 
     /*
@@ -36,9 +39,15 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
+        'restaurant' => [
+            'driver' => 'jwt',
+            'provider' => 'restaurants',
+            'hash' => false,
+        ],
+        'admin' => [
+            'driver' => 'jwt',
+            'provider' => 'admins',
+            'hash' => false,
         ],
     ],
 
@@ -60,9 +69,14 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => Admin::class,
+        ],
+        'restaurants' => [
+            'driver' => 'eloquent',
+            'model' => Restaurant::class,
+
         ],
 
         // 'users' => [
@@ -91,8 +105,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'restaurants' => [
+            'provider' => 'restaurants',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

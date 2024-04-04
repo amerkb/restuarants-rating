@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,5 +11,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/loginRestaurant', [AuthController::class, 'loginRestaurant']);
+use App\Http\Controllers\user\RatingController;
+use Illuminate\Support\Facades\Route;
+
+Route::post('storeRating', [RatingController::class, 'store']);
