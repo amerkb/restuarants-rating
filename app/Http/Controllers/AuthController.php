@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AuthResource;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -39,7 +40,6 @@ class AuthController extends Controller
         if (! $restaurant || md5($request->password) != $restaurant->password) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
         $token = JWTAuth::fromUser($restaurant);
 
         return $this->createNewToken($token, $restaurant);
@@ -50,7 +50,7 @@ class AuthController extends Controller
     {
         return response()->json([
             'access_token' => $token,
-            'user' => $user,
+            'user' => AuthResource::make($user),
         ]);
     }
 }

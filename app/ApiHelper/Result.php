@@ -23,7 +23,7 @@ class Result
      * @param  null  $validationMessage
      * @param  null  $paginate
      */
-    public function __construct($result = null, string $message = '', $paginate = null, bool $isOk = true)
+    public function __construct($result = null, string $message = 'Done', $paginate = null, bool $isOk = true)
     {
         $this->isOk = $isOk;
         $this->message = empty($message) ? Lang::get('Messages.TaskCompleteSuccessfully') : $message;

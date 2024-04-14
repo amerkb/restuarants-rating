@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\DashboardAdmin\GenerationController;
 use App\Http\Controllers\DashboardAdmin\RestaurantController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,4 +19,7 @@ Route::get('RestaurantByUuid/{restaurant:uuid}', [RestaurantController::class, '
 Route::middleware(['checkUser:admin'])->group(function () {
     Route::apiResource('restaurant', RestaurantController::class);
     Route::post('storeRestaurantsByNumber', [RestaurantController::class, 'storeRestaurantsByNumber']);
+    Route::get('get_value_for_Link', [GenerationController::class, 'show']);
+    Route::post('generation', [GenerationController::class, 'store']);
+    Route::put('create_value', [GenerationController::class, 'create_value']);
 });

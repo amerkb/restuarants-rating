@@ -7,8 +7,10 @@ use App\ApiHelper\ApiResponseCodes;
 use App\ApiHelper\ApiResponseHelper;
 use App\ApiHelper\Result;
 use App\Http\Resources\ServiceResource;
+use App\Http\Resources\TableResource;
 use App\Interfaces\DashboardRestaurant\ServiceInterface;
 use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceRepository extends BaseRepositoryImplementation implements ServiceInterface
 {
@@ -24,7 +26,10 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function getServices()
     {
-        $services = $this->get();
+        $services = $this->all();
+        foreach ($services as $index => $service) {
+            $service['id'] = $index + 1;
+        }
         $services = ServiceResource::collection($services);
 
         return ApiResponseHelper::sendResponse(
@@ -43,6 +48,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function storeService(array $dataService)
     {
+
         $service = $this->create($dataService);
         $service = ServiceResource::make($service);
 
@@ -67,6 +73,66 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
         return ApiResponseHelper::sendMessageResponse(
             'deleted successfully'
+        );
+    }
+
+    public function tableServices()
+    {
+        $restaurant = auth('restaurant')->user();
+        $userService = $restaurant->ratingServices()
+            ->with(['service' ,'rate' , 'user'])->get();
+         $ratings = $userService->groupby('rating_id');
+
+        $i = 0;
+        $children = [];
+        $new = [];
+        $parent = null;
+
+        foreach ($ratings as $index => $rating) {
+            $i++;
+            $children = [];
+            $parent = null;
+            $rate = 0;
+
+            foreach ($rating as $key => $value) {
+                $value['idd'] = $i.'_'.$key + 1;
+                $children[$key] = $value;
+                $rate = $rate + $value->rating;
+
+            }
+            $k = $i - 1;
+            $parent['idd'] = ''.$i.'';
+            $parent['name'] = 'overall';
+            $parent['rating'] = $rate / count($rating);
+            $parent['date'] = $rating[0]->created_at->toDateTimeString();
+            $parent['userName'] = $rating[0]->user->name??null;
+            $parent['userPhone'] = $rating[0]->user->phone??null;
+            $parent['note'] = $rating[0]->rate->note??null;
+
+            $new[$k] = $parent;
+            $new[$k]['children'] = $children;
+        }
+        $data = TableResource::collection($new);
+
+        return ApiResponseHelper::sendResponse(new Result($data, 'Done'));
+
+    }
+
+    public function avgService()
+    {
+        $restaurant = Auth::user();
+        $avg = $restaurant->avgService();
+
+        return ApiResponseHelper::sendResponseOnlyKey(['avg' => floatval($avg)]);
+    }
+
+    public function chartService()
+    {
+        $services = $this->all();
+        $services = ServiceResource::collection($services);
+
+        return ApiResponseHelper::sendResponse(
+            new Result($services, 'Done')
         );
     }
 }

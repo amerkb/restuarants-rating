@@ -46,7 +46,7 @@ class Admin extends Authenticatable implements JWTSubject
 
     public function meals(): BelongsToMany
     {
-        return $this->belongsToMany(Meal::class, 'users_meals')->withPivot('rating');
+        return $this->belongsToMany(Addition::class, 'users_meals')->withPivot('rating');
     }
 
     public function services(): BelongsToMany

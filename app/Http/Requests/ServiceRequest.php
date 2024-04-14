@@ -24,10 +24,12 @@ class ServiceRequest extends FormRequest
         if ($this->isMethod('post')) {
             return [
                 'statement' => 'required|string',
+                'service_id' => 'sometimes|exists:services,id',
             ];
         } else {
             return [
                 'statement' => 'sometimes|string',
+                'active' => 'sometimes|bool',
             ];
         }
     }

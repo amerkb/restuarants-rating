@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\DashboardRestaurant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MealRequest;
-use App\Interfaces\DashboardRestaurant\MealInterface;
-use App\Models\Meal;
+use App\Http\Requests\AdditionRequest;
+use App\Interfaces\DashboardRestaurant\AdditionInterface;
+use App\Models\Addition;
 use Illuminate\Support\Facades\Auth;
 
-class MealController extends Controller
+class AdditionController extends Controller
 {
     protected $meal;
 
-    public function __construct(MealInterface $meal)
+    public function __construct(AdditionInterface $meal)
     {
         $this->meal = $meal;
     }
@@ -29,7 +29,7 @@ class MealController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(MealRequest $request)
+    public function store(AdditionRequest $request)
     {
         $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id()], $request->validated());
 
@@ -39,7 +39,7 @@ class MealController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Meal $meal)
+    public function show(Addition $meal)
     {
         return $this->meal->showMeal($meal);
     }
@@ -47,7 +47,7 @@ class MealController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(MealRequest $request, Meal $meal)
+    public function update(AdditionRequest $request, Addition $meal)
     {
         $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id()], $request->validated());
 
@@ -57,10 +57,15 @@ class MealController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Meal $meal)
+    public function destroy(Addition $meal)
     {
 
         return $this->meal->deleteMeal($meal);
 
     }
+
+    /**
+     * average
+     */
+
 }

@@ -19,12 +19,12 @@ class RestaurantResource extends JsonResource
             return [
                 'id' => $this->id,
                 'uuid' => $this->uuid,
+                'status' => $this->status ?? null,
                 'nameCompany' => $this->restaurant_details->name ?? null,
                 'categoryCompany' => $this->restaurant_details->category ?? null,
-                'branchCompany' => $this->branch->name ?? null,
                 'logoCompany' => url($this->restaurant_details->logo ?? null),
                 'backgroundCompany' => url($this->restaurant_details->background ?? null),
-                'meals' => MealResource::collection($this->meals),
+                'additions' => AdditionResource::collection($this->additions),
                 'services' => ServiceResource::collection($this->services),
 
             ];

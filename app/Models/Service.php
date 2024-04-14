@@ -12,7 +12,7 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['restaurant_id', 'statement'];
+    protected $fillable = ['id', 'restaurant_id', 'statement'];
 
     public function restaurant(): BelongsTo
     {

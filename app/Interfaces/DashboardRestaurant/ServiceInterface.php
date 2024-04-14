@@ -8,6 +8,12 @@ interface ServiceInterface
 {
     public function getServices();
 
+    public function tableServices();
+
+    public function avgService();
+
+    public function chartService();
+
     public function showService(Service $service);
 
     public function storeService(array $dataService);

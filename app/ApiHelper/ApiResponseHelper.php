@@ -63,4 +63,31 @@ class ApiResponseHelper
             'message' => $message,
         ], $code);
     }
+
+    public static function sendResponseWithCount(Result $response, $count)
+    {
+        return \Response::json([
+            'success' => $response->isOk,
+            'message' => $response->message,
+            'count' => $count,
+            'data' => $response->result ?? null,
+        ], ApiResponseCodes::SUCCESS);
+    }
+
+    public static function sendResponseWithKey(Result $response, $array)
+    {
+        return \Response::json(array_merge($array, [
+            'success' => $response->isOk,
+            'message' => $response->message,
+            'data' => $response->result ?? null,
+        ]), ApiResponseCodes::SUCCESS);
+    }
+
+    public static function sendResponseOnlyKey($array, $success = true, $message = 'Done', $status = ApiResponseCodes::SUCCESS)
+    {
+        return \Response::json(array_merge($array, [
+            'success' => $success,
+            'message' => $message,
+        ]), $status);
+    }
 }

@@ -6,16 +6,16 @@ use App\Abstract\BaseRepositoryImplementation;
 use App\ApiHelper\ApiResponseCodes;
 use App\ApiHelper\ApiResponseHelper;
 use App\ApiHelper\Result;
-use App\Http\Resources\MealResource;
-use App\Interfaces\DashboardRestaurant\MealInterface;
-use App\Models\Meal;
+use App\Http\Resources\AdditionResource;
+use App\Interfaces\DashboardRestaurant\AdditionInterface;
+use App\Models\Addition;
 use Illuminate\Support\Facades\File;
 
-class MealRepository extends BaseRepositoryImplementation implements MealInterface
+class AdditionRepository extends BaseRepositoryImplementation implements AdditionInterface
 {
     public function model()
     {
-        return Meal::class;
+        return Addition::class;
     }
 
     public function getFilterItems($filter)
@@ -26,16 +26,16 @@ class MealRepository extends BaseRepositoryImplementation implements MealInterfa
     public function getMeals()
     {
         $meals = $this->get();
-        $meals = MealResource::collection($meals);
+        $meals = AdditionResource::collection($meals);
 
         return ApiResponseHelper::sendResponse(
             new Result($meals, 'Done')
         );
     }
 
-    public function showMeal(Meal $meal)
+    public function showMeal(Addition $meal)
     {
-        $meal = MealResource::make($meal);
+        $meal = AdditionResource::make($meal);
 
         return ApiResponseHelper::sendResponse(
             new Result($meal, 'Done')
@@ -45,28 +45,28 @@ class MealRepository extends BaseRepositoryImplementation implements MealInterfa
     public function storeMeal(array $dataMeal)
     {
         $meal = $this->create($dataMeal);
-        $meal = MealResource::make($meal);
+        $meal = AdditionResource::make($meal);
 
         return ApiResponseHelper::sendResponse(
             new Result($meal, 'Done'), ApiResponseCodes::CREATED
         );
     }
 
-    public function updateMeal(array $dataMeal, Meal $meal)
+    public function updateMeal(array $dataMeal, Addition $meal)
     {
         if ($dataMeal['image']) {
             File::delete(public_path($meal->image));
 
         }
         $meal = $this->updateById($meal->id, $dataMeal);
-        $meal = MealResource::make($meal);
+        $meal = AdditionResource::make($meal);
 
         return ApiResponseHelper::sendResponse(
             new Result($meal, 'Done')
         );
     }
 
-    public function deleteMeal(Meal $meal)
+    public function deleteMeal(Addition $meal)
     {
         File::delete(public_path($meal->image));
         $this->deleteById($meal->id);
@@ -75,5 +75,12 @@ class MealRepository extends BaseRepositoryImplementation implements MealInterfa
             'deleted successfully'
         );
 
+    }
+
+    public function avgMeals()
+    {
+        $this->scopes = 'averageRating';
+
+        return $this->get();
     }
 }

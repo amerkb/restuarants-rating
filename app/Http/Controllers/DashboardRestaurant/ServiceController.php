@@ -25,6 +25,29 @@ class ServiceController extends Controller
         return $this->service->getServices();
     }
 
+
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function tableServicesWithoutSub()
+    {
+        return $this->service->tableServices();
+    }
+
+
+
+    public function chartService()
+    {
+        return $this->service->chartService();
+    }
+
+    public function avgService()
+    {
+        return $this->service->avgService();
+    }
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -34,6 +57,8 @@ class ServiceController extends Controller
 
         return $this->service->storeService($data);
     }
+
+
 
     /**
      * Display the specified resource.
@@ -59,5 +84,36 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         return $this->service->deleteService($service);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function a()
+    {
+        return $node = Service::create([
+            'statement' => 'Foo',
+
+            'children' => [
+                [
+                    'statement' => 'Bar',
+                    'children' => [
+                        ['statement' => 'Baz'],
+                    ],
+                ],
+                [
+                    'statement' => 'Bar',
+                    'children' => [
+                        ['statement' => 'Baz'],
+                    ],
+                ],
+                [
+                    'statement' => 'Bar',
+                    'children' => [
+                        ['statement' => 'Baz'],
+                    ],
+                ],
+            ],
+        ]);
     }
 }

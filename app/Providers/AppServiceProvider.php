@@ -3,18 +3,22 @@
 namespace App\Providers;
 
 use App\Interfaces\DashboardAdmin\RestaurantInterface;
+use App\Interfaces\DashboardRestaurant\AdditionInterface;
 use App\Interfaces\DashboardRestaurant\BackgroundInterface;
 use App\Interfaces\DashboardRestaurant\LogoInterface;
-use App\Interfaces\DashboardRestaurant\MealInterface;
+use App\Interfaces\DashboardRestaurant\RatingInterface as IRR;
 use App\Interfaces\DashboardRestaurant\RestaurantDetailInterface;
 use App\Interfaces\DashboardRestaurant\ServiceInterface;
+use App\Interfaces\DashboardRestaurant\UserInterface;
 use App\Interfaces\user\RatingInterface;
 use App\Repository\DashboardAdmin\RestaurantRepository;
+use App\Repository\DashboardRestaurant\AdditionRepository;
 use App\Repository\DashboardRestaurant\BackgroundRepository;
 use App\Repository\DashboardRestaurant\LogoRepository;
-use App\Repository\DashboardRestaurant\MealRepository;
+use App\Repository\DashboardRestaurant\RatingRepository as RRR;
 use App\Repository\DashboardRestaurant\RestaurantDetailRepository;
 use App\Repository\DashboardRestaurant\ServiceRepository;
+use App\Repository\DashboardRestaurant\UserRepository;
 use App\Repository\user\RatingRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
@@ -30,8 +34,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RestaurantInterface::class, function () {
             return new RestaurantRepository();
         });
-        $this->app->bind(MealInterface::class, function () {
-            return new MealRepository();
+        $this->app->bind(AdditionInterface::class, function () {
+            return new AdditionRepository();
         });
         $this->app->bind(ServiceInterface::class, function () {
             return new ServiceRepository();
@@ -47,6 +51,12 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->bind(RestaurantDetailInterface::class, function () {
             return new RestaurantDetailRepository();
+        });
+        $this->app->bind(IRR::class, function () {
+            return new RRR();
+        });
+        $this->app->bind(UserInterface::class, function () {
+            return new UserRepository();
         });
 
     }

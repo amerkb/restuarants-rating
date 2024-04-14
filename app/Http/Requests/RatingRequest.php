@@ -26,8 +26,8 @@ class RatingRequest extends FormRequest
             'phone' => 'nullable|string',
             'services.*.id' => 'required|exists:services,id',
             'services.*.rating' => 'nullable|numeric|between:0,5',
-            'meals.*.id' => 'required|exists:meals,id',
-            'meals.*.rating' => 'nullable|numeric|between:0,5',
+            'additions.*.id' => 'required|exists:additions,id',
+            'additions.*.rating' => 'nullable|numeric|between:0,5',
 
         ];
     }

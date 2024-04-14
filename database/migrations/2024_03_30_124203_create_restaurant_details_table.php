@@ -16,7 +16,11 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('category')->nullable();
             $table->string('logo')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->string('background')->nullable();
+            $table->string('startMessage')->nullable();
+            $table->string('endMessage')->nullable();
             $table->timestamps();
             $table->primary(['restaurant_id']);
 

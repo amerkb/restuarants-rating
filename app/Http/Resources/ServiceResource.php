@@ -14,11 +14,14 @@ class ServiceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
-            'id' => $this->id,
-            'statement' => $this->statement,
-            'avg_rating' => floatval($this->averageRating($this->id)),
-            'created_at' => $this->created_at->toDateTimeString(),
+            'id' => $this->id ?? null,
+            'name' => $this->statement ?? null,
+            'available' => boolval($this->active),
+            'avg_rating' => isset($this->id) ? floatval($this->averageRating($this->id)) : null,
+            'created_at' => isset($this->created_at) ? $this->created_at->toDateTimeString() : null,
+            'edited' => false,
         ];
     }
 }

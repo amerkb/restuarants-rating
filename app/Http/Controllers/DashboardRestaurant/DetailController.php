@@ -25,4 +25,10 @@ class DetailController extends Controller
         return $this->detail->updateDetail($request->validated());
 
     }
+
+    public function changeStatus()
+    {
+        return $this->detail->changeStatus();
+
+    }
 }

@@ -48,4 +48,12 @@ class RestaurantDetailRepository extends BaseRepositoryImplementation implements
 
         return ApiResponseHelper::sendResponse(new Result($restaurant, 'done'));
     }
+
+    public function changeStatus()
+    {
+        $restaurant = Auth::user();
+        $restaurant->update(['status' => ! $restaurant->status]);
+
+        return ApiResponseHelper::sendMessageResponse('update successfully');
+    }
 }
