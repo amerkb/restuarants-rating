@@ -8,6 +8,7 @@ use App\ApiHelper\ApiResponseHelper;
 use App\Http\Requests\RatingRequest;
 use App\Interfaces\user\RatingInterface;
 use App\Models\Rating;
+use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -21,11 +22,12 @@ class RatingRepository extends BaseRepositoryImplementation implements RatingInt
             if ($request->phone && $request->name) {
                 $data = ['phone' => $request->phone, 'name' => $request->name];
                 $user = $this->updateOrCreate(['phone' => $request->phone, 'name' => $request->name], $data);
-                $user->restaurants()->syncWithoutDetaching($request->restaurant_id);
+                $restaurant = Restaurant::where('uuid', $request->restaurant_uuid)->first();
+                $user->restaurants()->syncWithoutDetaching($restaurant->id);
                 $user = $user->id;
 
             }
-            $rating = Rating::create(['restaurant_id' => $request->restaurant_id]);
+            $rating = Rating::create(['restaurant_id' => $restaurant->id, 'note' => $request->note]);
             if (isset($request->additions)) {
                 $additions = [];
                 foreach ($request->additions as $index => $addition) {

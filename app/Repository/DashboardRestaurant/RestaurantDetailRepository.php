@@ -27,11 +27,11 @@ class RestaurantDetailRepository extends BaseRepositoryImplementation implements
     public function storeDetail(array $dataDetail)
     {
         $data = array_merge(['restaurant_id' => Auth::id()], $dataDetail);
-        $this->updateOrCreate(['restaurant_id' => Auth::id()], $data);
+        $restaurantDetails = $this->updateOrCreate(['restaurant_id' => Auth::id()], $data);
         if (isset($dataDetail['branch'])) {
             Branch::updateOrCreate(['restaurant_id' => Auth::id()], ['restaurant_id' => Auth::id(), 'name' => $dataDetail['branch']]);
         }
-        $restaurant = RestaurantResource::make(Auth::user());
+        $restaurant = RestaurantResource::make($restaurantDetails);
 
         return ApiResponseHelper::sendResponse(new Result($restaurant, 'done'), ApiResponseCodes::CREATED);
 

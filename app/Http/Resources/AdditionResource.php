@@ -17,10 +17,9 @@ class AdditionResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            //            'avg_rating' => floatval($this->averageRating($this->id)),
+            'avg_rating' => floatval($this->averageRating()),
             'active' => boolval($this->active),
-            'restaurant_id' => intval($this->restaurant_id),
-            'created_at' => $this->created_at->toDateTimeString(),
+
         ];
     }
 }

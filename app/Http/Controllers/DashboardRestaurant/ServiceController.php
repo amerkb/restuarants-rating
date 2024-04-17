@@ -7,6 +7,7 @@ use App\Http\Requests\ServiceRequest;
 use App\Interfaces\DashboardRestaurant\ServiceInterface;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
@@ -25,17 +26,13 @@ class ServiceController extends Controller
         return $this->service->getServices();
     }
 
-
-
     /**
      * Display a listing of the resource.
      */
-    public function tableServicesWithoutSub()
+    public function tableServicesWithoutSub(Request $request)
     {
-        return $this->service->tableServices();
+        return $this->service->tableServices($request);
     }
-
-
 
     public function chartService()
     {
@@ -47,7 +44,6 @@ class ServiceController extends Controller
         return $this->service->avgService();
     }
 
-
     /**
      * Store a newly created resource in storage.
      */
@@ -57,8 +53,6 @@ class ServiceController extends Controller
 
         return $this->service->storeService($data);
     }
-
-
 
     /**
      * Display the specified resource.

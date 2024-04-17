@@ -25,6 +25,10 @@ class RestaurantDetailRequest extends FormRequest
             'name' => 'nullable|string',
             'category' => 'nullable|string',
             'branch' => 'nullable|string',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|numeric',
+            'startMessage' => 'nullable|string',
+            'endMessage' => 'nullable|string',
 
         ];
     }

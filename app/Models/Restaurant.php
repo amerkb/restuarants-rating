@@ -70,14 +70,14 @@ class Restaurant extends Authenticatable implements JWTSubject
 
     }
 
-    public function scopeAvgServiceOnlySub($query)
+    public function scopeAvgAddition($query)
     {
-        $services = $this->services()->getSub();
+        $additions = $this->additions;
         $avg = 0;
-        foreach ($services as $service) {
-            $avg += $service->averageRating($service->id);
+        foreach ($additions as $addition) {
+            $avg += $addition->averageRating();
         }
-        $avg = $avg / count($services);
+        $avg = $avg / count($additions);
 
         return number_format($avg, 2);
 

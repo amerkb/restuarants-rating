@@ -10,6 +10,7 @@ use App\Http\Resources\ServiceResource;
 use App\Http\Resources\TableResource;
 use App\Interfaces\DashboardRestaurant\ServiceInterface;
 use App\Models\Service;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ServiceRepository extends BaseRepositoryImplementation implements ServiceInterface
@@ -60,6 +61,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
     public function updateService(array $dataService, Service $service)
     {
         $service = $this->updateById($service->id, $dataService);
+
         $service = ServiceResource::make($service);
 
         return ApiResponseHelper::sendResponse(
@@ -76,12 +78,13 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
         );
     }
 
-    public function tableServices()
+    public function tableServices(Request $request)
     {
         $restaurant = auth('restaurant')->user();
         $userService = $restaurant->ratingServices()
-            ->with(['service' ,'rate' , 'user'])->get();
-         $ratings = $userService->groupby('rating_id');
+            ->whereBetween('users_services.created_at', [$request->startDate.' 00:00:00', $request->endDate.' 23:59:59'])
+            ->with(['service', 'rate', 'user'])->get();
+        $ratings = $userService->groupby('rating_id');
 
         $i = 0;
         $children = [];
@@ -105,9 +108,9 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
             $parent['name'] = 'overall';
             $parent['rating'] = $rate / count($rating);
             $parent['date'] = $rating[0]->created_at->toDateTimeString();
-            $parent['userName'] = $rating[0]->user->name??null;
-            $parent['userPhone'] = $rating[0]->user->phone??null;
-            $parent['note'] = $rating[0]->rate->note??null;
+            $parent['userName'] = $rating[0]->user->name ?? null;
+            $parent['userPhone'] = $rating[0]->user->phone ?? null;
+            $parent['note'] = $rating[0]->rate->note ?? null;
 
             $new[$k] = $parent;
             $new[$k]['children'] = $children;

@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserAddition extends Model
 {
-    protected $table = 'users_meals';
+    use HasFactory;
 
-    public function meal(): BelongsTo
+    protected $table = 'users_additions';
+
+    public function addition(): BelongsTo
     {
         return $this->belongsTo(Addition::class);
     }
@@ -20,5 +22,8 @@ class UserAddition extends Model
         return $this->belongsTo(User::class);
     }
 
-    use HasFactory;
+    public function rate(): BelongsTo
+    {
+        return $this->belongsTo(Rating::class, 'rating_id');
+    }
 }

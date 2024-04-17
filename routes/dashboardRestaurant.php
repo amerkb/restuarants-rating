@@ -20,6 +20,14 @@ use Illuminate\Support\Facades\Route;
 */
 Route::middleware(['checkUser:restaurant'])->group(function () {
     Route::apiResource('addition', AdditionController::class);
+    Route::get('chartAddition', [AdditionController::class, 'chartAddition']); //chart columns sub
+    Route::get('tableAddition', [AdditionController::class, 'tableAddition']); //table
+    Route::get('avgAddition', [AdditionController::class, 'avgAddition']); //qvg
+    Route::apiResource('service', ServiceController::class);
+    Route::get('chartService', [ServiceController::class, 'chartService']); //chart columns services
+    Route::get('tableServicesWithoutSub', [ServiceController::class, 'tableServicesWithoutSub']);
+    Route::get('avgService', [ServiceController::class, 'avgService']); //avg
+    Route::get('getUser', [UserController::class, 'getUser']); // user count status
     Route::get('logo', [LogoController::class, 'show']);
     Route::post('logo', [LogoController::class, 'store']);
     Route::post('logoUpdate', [LogoController::class, 'update']);
@@ -29,19 +37,9 @@ Route::middleware(['checkUser:restaurant'])->group(function () {
     Route::post('backgroundUpdate', [BackgroundController::class, 'update']);
     Route::delete('background', [BackgroundController::class, 'destroy']);
     Route::post('detail', [DetailController::class, 'store']);
-    Route::put('detail', [DetailController::class, 'update']);
-    Route::get('serviceWithSub', [ServiceController::class, 'getServiceWithSub']);
-    Route::get('tableServicesWithoutSub', [ServiceController::class, 'tableServicesWithoutSub']);
-    Route::get('tableServiceSub', [ServiceController::class, 'tableServiceSub']); //table
-    Route::get('chartServiceOnlySub', [ServiceController::class, 'chartServiceOnlySub']); //chart columns sub
-    Route::get('chartService', [ServiceController::class, 'chartService']); //chart columns services
-    Route::get('getUser', [UserController::class, 'getUser']); // user count status
+    Route::put('detail', [DetailController::class, 'store']);
     Route::put('changeStatus', [DetailController::class, 'changeStatus']); // update status
-    Route::get('avgService', [ServiceController::class, 'avgService']); //avg
-    Route::get('avgServiceOnlySubs', [ServiceController::class, 'avgServiceOnlySub']); //qvg
-    Route::apiResource('service', ServiceController::class);
     //edit
-    Route::post('storeParentService', [ServiceController::class, 'storeParent']);
 
 });
 Route::get('a', [ServiceController::class, 'a']);

@@ -12,15 +12,7 @@ class Addition extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['restaurant_id', 'name', 'image', 'active'];
-
-    public function setImageAttribute($image)
-    {
-        $newImageName = uniqid().'_'.'image'.'.'.$image->extension();
-        $image->move(public_path('asset/meal'), $newImageName);
-
-        return $this->attributes['image'] = '/asset/meal/'.$newImageName;
-    }
+    protected $fillable = ['restaurant_id', 'name', 'active'];
 
     public function restaurant(): BelongsTo
     {
@@ -29,12 +21,12 @@ class Addition extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'users_meals')->withPivot('rating');
+        return $this->belongsToMany(User::class, 'users_additions')->withPivot('rating');
     }
 
-    public function scopeAverageRating($query, $mealId)
+    public function scopeAverageRating($query)
     {
-        $rating = DB::table('users_meals')->where('meal_id', $mealId)->avg('rating');
+        $rating = DB::table('users_additions')->where('addition_id', $this->id)->avg('rating');
 
         return number_format($rating, 2);
     }

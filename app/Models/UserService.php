@@ -24,6 +24,6 @@ class UserService extends Model
 
     public function rate(): BelongsTo
     {
-        return $this->belongsTo(Rating::class,'rating_id');
+        return $this->belongsTo(Rating::class, 'rating_id');
     }
 }

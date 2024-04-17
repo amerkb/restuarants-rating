@@ -3,12 +3,13 @@
 namespace App\Interfaces\DashboardRestaurant;
 
 use App\Models\Service;
+use Illuminate\Http\Request;
 
 interface ServiceInterface
 {
     public function getServices();
 
-    public function tableServices();
+    public function tableServices(Request $request);
 
     public function avgService();
 

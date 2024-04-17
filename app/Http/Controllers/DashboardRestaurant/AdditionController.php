@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdditionRequest;
 use App\Interfaces\DashboardRestaurant\AdditionInterface;
 use App\Models\Addition;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;use Illuminate\Http\Request;
+
 
 class AdditionController extends Controller
 {
@@ -26,6 +27,21 @@ class AdditionController extends Controller
 
     }
 
+    public function tableAddition(Request $request)
+    {
+        return $this->meal->tableAddition($request);
+    }
+
+    public function chartAddition()
+    {
+        return $this->meal->chartAddition();
+    }
+
+    public function avgAddition()
+    {
+        return $this->meal->avgAddition();
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -39,33 +55,32 @@ class AdditionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Addition $meal)
+    public function show(Addition $addition)
     {
-        return $this->meal->showMeal($meal);
+        return $this->meal->showMeal($addition);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(AdditionRequest $request, Addition $meal)
+    public function update(AdditionRequest $request, Addition $addition)
     {
         $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id()], $request->validated());
 
-        return $this->meal->updateMeal($data, $meal);
+        return $this->meal->updateMeal($data, $addition);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Addition $meal)
+    public function destroy(Addition $addition)
     {
 
-        return $this->meal->deleteMeal($meal);
+        return $this->meal->deleteMeal($addition);
 
     }
 
     /**
      * average
      */
-
 }
