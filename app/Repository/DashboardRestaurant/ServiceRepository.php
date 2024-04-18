@@ -81,9 +81,15 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
     public function tableServices(Request $request)
     {
         $restaurant = auth('restaurant')->user();
-        $userService = $restaurant->ratingServices()
-            ->whereBetween('users_services.created_at', [$request->startDate.' 00:00:00', $request->endDate.' 23:59:59'])
-            ->with(['service', 'rate', 'user'])->get();
+        $userService = null;
+        if ($request->startDate && $request->endDate) {
+            $userService = $restaurant->ratingServices()
+                ->whereBetween('users_services.created_at', [$request->startDate.' 00:00:00', $request->endDate.' 23:59:59'])
+                ->with(['service', 'rate', 'user'])->get();
+        } else {
+            $userService = $restaurant->ratingServices()
+                ->with(['service', 'rate', 'user'])->get();
+        }
         $ratings = $userService->groupby('rating_id');
 
         $i = 0;

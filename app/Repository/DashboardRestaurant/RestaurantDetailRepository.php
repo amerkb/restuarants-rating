@@ -28,6 +28,7 @@ class RestaurantDetailRepository extends BaseRepositoryImplementation implements
     {
         $data = array_merge(['restaurant_id' => Auth::id()], $dataDetail);
         $restaurantDetails = $this->updateOrCreate(['restaurant_id' => Auth::id()], $data);
+
         if (isset($dataDetail['branch'])) {
             Branch::updateOrCreate(['restaurant_id' => Auth::id()], ['restaurant_id' => Auth::id(), 'name' => $dataDetail['branch']]);
         }
@@ -40,11 +41,11 @@ class RestaurantDetailRepository extends BaseRepositoryImplementation implements
     public function updateDetail(array $dataDetail)
     {
         $data = array_merge(['restaurant_id' => Auth::id()], $dataDetail);
-        $this->updateOrCreate(['restaurant_id' => Auth::id()], $data);
+        $restaurant = $this->updateOrCreate(['restaurant_id' => Auth::id()], $data);
         if (isset($dataDetail['branch'])) {
             Branch::updateOrCreate(['restaurant_id' => Auth::id()], ['restaurant_id' => Auth::id(), 'name' => $dataDetail['branch']]);
         }
-        $restaurant = RestaurantResource::make(Auth::user());
+        $restaurant = RestaurantResource::make($restaurant);
 
         return ApiResponseHelper::sendResponse(new Result($restaurant, 'done'));
     }

@@ -10,10 +10,9 @@ use App\Http\Resources\AdditionResource;
 use App\Http\Resources\TableResource;
 use App\Interfaces\DashboardRestaurant\AdditionInterface;
 use App\Models\Addition;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Http\Request;
-
 
 class AdditionRepository extends BaseRepositoryImplementation implements AdditionInterface
 {
@@ -80,9 +79,15 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
     public function tableAddition(Request $request)
     {
         $restaurant = auth('restaurant')->user();
-        $userAdditions = $restaurant->ratingAdditions()
-            ->whereBetween('users_additions.created_at', [$request->startDate.' 00:00:00', $request->endDate.' 23:59:59'])
-            ->with(['addition', 'rate', 'user'])->get();
+        $userAdditions = null;
+        if ($request->startDate && $request->endDate) {
+            $userAdditions = $restaurant->ratingAdditions()
+                ->whereBetween('users_additions.created_at', [$request->startDate.' 00:00:00', $request->endDate.' 23:59:59'])
+                ->with(['addition', 'rate', 'user'])->get();
+        } else {
+            $userAdditions = $restaurant->ratingAdditions()
+                ->with(['addition', 'rate', 'user'])->get();
+        }
         $ratings = $userAdditions->groupby('rating_id');
 
         $i = 0;

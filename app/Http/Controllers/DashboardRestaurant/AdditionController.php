@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdditionRequest;
 use App\Interfaces\DashboardRestaurant\AdditionInterface;
 use App\Models\Addition;
-use Illuminate\Support\Facades\Auth;use Illuminate\Http\Request;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdditionController extends Controller
 {

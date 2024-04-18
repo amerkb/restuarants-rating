@@ -36,9 +36,7 @@ class RestaurantResource extends JsonResource
         }
 
         return [
-            'id' => $this->restaurant->id,
-            'uuid' => $this->restaurant->uuid,
-            'nameCompany' => $this->restaurant->name,
+
             'logoCompany' => url($this->logo),
             'backgroundCompany' => url($this->background),
             'phoneCompany' => $this->phone,
