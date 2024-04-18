@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('restaurant_id')->constrained()->cascadeOnDelete();
-            $table->string('note');
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }
