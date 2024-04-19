@@ -29,6 +29,9 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
     public function getMeals()
     {
         $meals = $this->get();
+        foreach ($meals as $index => $meal) {
+            $meal['idd'] = $index + 1;
+        }
         $meals = AdditionResource::collection($meals);
 
         return ApiResponseHelper::sendResponse(

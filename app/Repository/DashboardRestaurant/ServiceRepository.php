@@ -29,7 +29,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
     {
         $services = $this->all();
         foreach ($services as $index => $service) {
-            $service['id'] = $index + 1;
+            $service['idd'] = $index + 1;
         }
         $services = ServiceResource::collection($services);
 

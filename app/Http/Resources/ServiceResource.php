@@ -16,7 +16,8 @@ class ServiceResource extends JsonResource
     {
 
         return [
-            'id' => $this->id ?? null,
+            'id' => $this->idd ?? null,
+            'idReal' => $this->id ?? null,
             'name' => $this->statement ?? null,
             'available' => boolval($this->active),
             'avg_rating' => isset($this->id) ? floatval($this->averageRating($this->id)) : null,

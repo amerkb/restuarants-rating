@@ -15,10 +15,12 @@ class AdditionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->idd ?? null,
+            "idReal"=> $this->id,
             'name' => $this->name,
+            'available' => boolval($this->active),
             'avg_rating' => floatval($this->averageRating()),
-            'active' => boolval($this->active),
+            "edited"=> false,
 
         ];
     }
