@@ -33,11 +33,12 @@ class ServiceRequest extends FormRequest
             ];
         }
     }
+
     public function validationData(): array
     {
         $data = $this->all();
 
-        if ($this->isMethod('post') && !isset($data['active'])) {
+        if ($this->isMethod('post') && ! isset($data['active'])) {
             $data['active'] = true;
         }
 

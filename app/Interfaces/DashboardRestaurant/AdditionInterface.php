@@ -19,6 +19,8 @@ interface AdditionInterface
 
     public function storeMeal(array $dataMeal);
 
+    public function changeStatusAdditional();
+
     public function updateMeal(array $dataAddition, Addition $addition);
 
     public function deleteMeal(Addition $meal);

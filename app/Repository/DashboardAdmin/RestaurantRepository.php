@@ -56,7 +56,7 @@ class RestaurantRepository extends BaseRepositoryImplementation implements Resta
                 $restaurants[$i] = [
                     'id' => $lastRestaurant + 1 + $i,
                     'password' => md5($password[$i]),
-                    'name' => 'restaurant '.$lastRestaurant + 1 + $i,
+                    'name' => 'business '.$lastRestaurant + 1 + $i,
                     'uuid' => Str::uuid(),
                 ];
 
@@ -84,7 +84,7 @@ class RestaurantRepository extends BaseRepositoryImplementation implements Resta
                 $sheet->setCellValue('B'.$row, $restaurant['name']);
                 $sheet->setCellValue('C'.$row, $password[$index]);
                 $sheet->setCellValue('D'.$row, $restaurant['uuid']);
-                $sheet->setCellValue('E'.$row, 'link.com?restaurant='.$restaurant['uuid']);
+                $sheet->setCellValue('E'.$row, 'https://user.super-rate.tech/?business='.$restaurant['uuid']);
 
                 // Set cell styling and spacing
                 $cellRange = 'A'.$row.':E'.$row;
@@ -92,7 +92,7 @@ class RestaurantRepository extends BaseRepositoryImplementation implements Resta
             }
 
             // Set the file name and save the Excel file
-            $fileName = 'restaurants.xlsx';
+            $fileName = 'super_rate_users.xlsx';
             $writer = new Xlsx($spreadsheet);
             $writer->save($fileName);
             DB::commit();

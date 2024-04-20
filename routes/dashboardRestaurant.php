@@ -23,6 +23,7 @@ Route::middleware(['checkUser:restaurant'])->group(function () {
     Route::get('chartAddition', [AdditionController::class, 'chartAddition']); //chart columns sub
     Route::get('tableAddition', [AdditionController::class, 'tableAddition']); //table
     Route::get('avgAddition', [AdditionController::class, 'avgAddition']); //qvg
+    Route::put('changeStatusAdditional', [AdditionController::class, 'changeStatusAdditional']); // update Additional status
     Route::apiResource('service', ServiceController::class);
     Route::get('chartService', [ServiceController::class, 'chartService']); //chart columns services
     Route::get('tableServicesWithoutSub', [ServiceController::class, 'tableServicesWithoutSub']);

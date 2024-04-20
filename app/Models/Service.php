@@ -30,5 +30,4 @@ class Service extends Model
 
         return number_format($rating, 2);
     }
-
 }

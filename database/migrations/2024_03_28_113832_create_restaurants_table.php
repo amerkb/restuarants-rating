@@ -18,6 +18,7 @@ return new class extends Migration
             $table->uuid();
             $table->boolean('infoStatus')->default(true);
             $table->boolean('messageStatus')->default(true);
+            $table->boolean('additionalStatus')->default(true);
             $table->timestamps();
         });
     }

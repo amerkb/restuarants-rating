@@ -34,8 +34,8 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
         }
         $meals = AdditionResource::collection($meals);
 
-        return ApiResponseHelper::sendResponse(
-            new Result($meals, 'Done')
+        return ApiResponseHelper::sendResponseWithKey(
+            new Result($meals, 'Done'),['additionalStatus'=>boolval(Auth::user()->additionalStatus)]
         );
     }
 
@@ -144,5 +144,13 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
         return ApiResponseHelper::sendResponse(
             new Result($additions, 'Done')
         );
+    }
+
+    public function changeStatusAdditional()
+    {
+        $restaurant = Auth::user();
+        $restaurant->update(['additionalStatus' => ! $restaurant->additionalStatus]);
+
+        return ApiResponseHelper::sendMessageResponse('update successfully');
     }
 }

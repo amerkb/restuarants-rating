@@ -21,6 +21,7 @@ class RestaurantResource extends JsonResource
                 'uuid' => $this->uuid,
                 'infoStatus' => boolval($this->infoStatus) ?? null,
                 'messageStatus' => boolval($this->messageStatus) ?? null,
+                'additionalStatus' => boolval($this->additionalStatus) ?? null,
                 'nameCompany' => $this->restaurant_details->name ?? null,
                 'branchCompany' => $this->branch->name ?? null,
                 'categoryCompany' => $this->restaurant_details->category ?? null,

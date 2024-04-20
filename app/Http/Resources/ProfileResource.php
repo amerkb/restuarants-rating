@@ -15,6 +15,7 @@ class ProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'messageStatus' => boolval($this->messageStatus) ?? null,
             'branchCompany' => $this->branch->name ?? null,
             'categoryCompany' => $this->restaurant_details->category ?? null,
             'phoneCompany' => $this->restaurant_details->phone ?? null,

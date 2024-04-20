@@ -80,7 +80,10 @@ class AdditionController extends Controller
 
     }
 
-    /**
-     * average
-     */
+    public function changeStatusAdditional()
+    {
+
+        return $this->meal->changeStatusAdditional();
+
+    }
 }
