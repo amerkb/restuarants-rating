@@ -37,7 +37,7 @@ class ServiceRequest extends FormRequest
     {
         $data = $this->all();
 
-        if (!isset($data['active'])) {
+        if ($this->isMethod('post') && !isset($data['active'])) {
             $data['active'] = true;
         }
 
