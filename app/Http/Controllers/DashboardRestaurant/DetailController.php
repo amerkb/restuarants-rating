@@ -15,6 +15,11 @@ class DetailController extends Controller
         $this->detail = $restaurantDetail;
     }
 
+    public function show()
+    {
+        return $this->detail->showDetail();
+    }
+
     public function store(RestaurantDetailRequest $request)
     {
         return $this->detail->storeDetail($request->validated());
@@ -29,6 +34,12 @@ class DetailController extends Controller
     public function changeStatus()
     {
         return $this->detail->changeStatus();
+
+    }
+
+    public function changeStatusMessage()
+    {
+        return $this->detail->changeStatusMessage();
 
     }
 }

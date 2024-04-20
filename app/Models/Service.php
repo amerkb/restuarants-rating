@@ -12,7 +12,7 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'restaurant_id', 'statement'];
+    protected $fillable = ['id', 'restaurant_id', 'statement', 'active'];
 
     public function restaurant(): BelongsTo
     {
@@ -30,4 +30,5 @@ class Service extends Model
 
         return number_format($rating, 2);
     }
+
 }

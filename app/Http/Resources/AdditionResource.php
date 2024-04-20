@@ -16,11 +16,11 @@ class AdditionResource extends JsonResource
     {
         return [
             'id' => $this->idd ?? null,
-            "idReal"=> $this->id,
+            'idReal' => $this->id,
             'name' => $this->name,
             'available' => boolval($this->active),
             'avg_rating' => floatval($this->averageRating()),
-            "edited"=> false,
+            'edited' => false,
 
         ];
     }

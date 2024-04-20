@@ -6,6 +6,7 @@ use App\Abstract\BaseRepositoryImplementation;
 use App\ApiHelper\ApiResponseCodes;
 use App\ApiHelper\ApiResponseHelper;
 use App\ApiHelper\Result;
+use App\Http\Resources\ProfileResource;
 use App\Http\Resources\RestaurantResource;
 use App\Interfaces\DashboardRestaurant\RestaurantDetailInterface;
 use App\Models\Branch;
@@ -50,10 +51,28 @@ class RestaurantDetailRepository extends BaseRepositoryImplementation implements
         return ApiResponseHelper::sendResponse(new Result($restaurant, 'done'));
     }
 
+    public function showDetail()
+    {
+
+        $restaurant = Auth::user();
+        $restaurant = ProfileResource::make($restaurant);
+
+        return ApiResponseHelper::sendResponse(new Result($restaurant, 'done'));
+
+    }
+
     public function changeStatus()
     {
         $restaurant = Auth::user();
-        $restaurant->update(['status' => ! $restaurant->status]);
+        $restaurant->update(['infoStatus' => ! $restaurant->infoStatus]);
+
+        return ApiResponseHelper::sendMessageResponse('update successfully');
+    }
+
+    public function changeStatusMessage()
+    {
+        $restaurant = Auth::user();
+        $restaurant->update(['messageStatus' => ! $restaurant->messageStatus]);
 
         return ApiResponseHelper::sendMessageResponse('update successfully');
     }

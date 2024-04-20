@@ -24,7 +24,7 @@ class ServiceRequest extends FormRequest
         if ($this->isMethod('post')) {
             return [
                 'statement' => 'required|string',
-                'service_id' => 'sometimes|exists:services,id',
+                'active' => 'sometimes|bool',
             ];
         } else {
             return [
@@ -32,5 +32,15 @@ class ServiceRequest extends FormRequest
                 'active' => 'sometimes|bool',
             ];
         }
+    }
+    public function validationData(): array
+    {
+        $data = $this->all();
+
+        if (!isset($data['active'])) {
+            $data['active'] = true;
+        }
+
+        return $data;
     }
 }

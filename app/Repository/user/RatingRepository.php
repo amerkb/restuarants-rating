@@ -19,7 +19,7 @@ class RatingRepository extends BaseRepositoryImplementation implements RatingInt
         try {
 
             $user = null;
-                $restaurant = Restaurant::where('uuid', $request->restaurant_uuid)->first();
+            $restaurant = Restaurant::where('uuid', $request->restaurant_uuid)->first();
             if ($request->phone && $request->name) {
                 $data = ['phone' => $request->phone, 'name' => $request->name];
                 $user = $this->updateOrCreate(['phone' => $request->phone, 'name' => $request->name], $data);

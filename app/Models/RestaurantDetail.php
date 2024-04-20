@@ -12,7 +12,7 @@ class RestaurantDetail extends Model
 
     protected $primaryKey = 'restaurant_id';
 
-    protected $fillable = ['restaurant_id', 'name', 'category', 'logo', 'background', 'phone', 'email', 'startMessage', 'endMessage'];
+    protected $fillable = ['restaurant_id', 'name', 'category', 'logo', 'background',  'phone', 'email', 'startMessage', 'endMessage'];
 
     public function setLogoAttribute($logo)
     {

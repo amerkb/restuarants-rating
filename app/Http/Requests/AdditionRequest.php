@@ -33,4 +33,14 @@ class AdditionRequest extends FormRequest
             ];
         }
     }
+    public function validationData(): array
+    {
+        $data = $this->all();
+
+        if (!isset($data['active'])) {
+            $data['active'] = true;
+        }
+
+        return $data;
+    }
 }

@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('password');
-            $table->boolean('status')->default(true);
             $table->uuid();
+            $table->boolean('infoStatus')->default(true);
+            $table->boolean('messageStatus')->default(true);
             $table->timestamps();
         });
     }

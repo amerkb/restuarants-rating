@@ -36,10 +36,11 @@ Route::middleware(['checkUser:restaurant'])->group(function () {
     Route::post('background', [BackgroundController::class, 'store']);
     Route::post('backgroundUpdate', [BackgroundController::class, 'update']);
     Route::delete('background', [BackgroundController::class, 'destroy']);
+    Route::get('detail', [DetailController::class, 'show']);
     Route::post('detail', [DetailController::class, 'store']);
     Route::put('detail', [DetailController::class, 'store']);
-    Route::put('changeStatus', [DetailController::class, 'changeStatus']); // update status
-    //edit
+    Route::put('changeStatus', [DetailController::class, 'changeStatus']); // update info status
+    Route::put('changeStatusMessage', [DetailController::class, 'changeStatusMessage']); // update message status
 
 });
 Route::get('a', [ServiceController::class, 'a']);

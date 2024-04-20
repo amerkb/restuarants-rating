@@ -16,7 +16,7 @@ class Restaurant extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'password', 'uuid', 'status'];
+    protected $fillable = ['name', 'password', 'uuid', 'messageStatus', 'infoStatus', 'status'];
 
     protected $hidden = [
         'password',
@@ -31,7 +31,10 @@ class Restaurant extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Addition::class);
     }
-
+    public function scopeActiveAddition($query)
+    {
+        return $this->additions()->where('active',true)->get();
+    }
     public function ratingAdditions(): HasManyThrough
     {
         return $this->hasManyThrough(UserAddition::class, Rating::class);
@@ -50,6 +53,10 @@ class Restaurant extends Authenticatable implements JWTSubject
     public function services(): HasMany
     {
         return $this->hasMany(Service::class);
+    }
+    public function scopeActiveServices($query)
+    {
+        return $this->services()->where('active',true)->get();
     }
 
     public function users(): BelongsToMany

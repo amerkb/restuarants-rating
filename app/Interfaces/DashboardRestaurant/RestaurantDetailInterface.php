@@ -8,5 +8,9 @@ interface RestaurantDetailInterface
 
     public function updateDetail(array $dataDetail);
 
+    public function showDetail();
+
     public function changeStatus();
+
+    public function changeStatusMessage();
 }
