@@ -14,7 +14,7 @@ class UserRepository extends BaseRepositoryImplementation implements UserInterfa
     public function getUser()
     {
         $this->with('users');
-        $restaurant = $this->getById(auth('restaurant')->id());
+        $restaurant = $this->getById(auth()->id());
         $data = UserResource::collection($restaurant->users);
         $count = count($restaurant->users);
 

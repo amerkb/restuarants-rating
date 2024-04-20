@@ -47,7 +47,8 @@ class AdditionController extends Controller
      */
     public function store(AdditionRequest $request)
     {
-        $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id()], $request->validated());
+
+        $data = array_merge(['restaurant_id' => Auth::id()], $request->validated());
 
         return $this->meal->storeMeal($data);
     }
@@ -65,7 +66,7 @@ class AdditionController extends Controller
      */
     public function update(AdditionRequest $request, Addition $addition)
     {
-        $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id()], $request->validated());
+        $data = array_merge(['restaurant_id' => Auth::id()], $request->validated());
 
         return $this->meal->updateMeal($data, $addition);
     }

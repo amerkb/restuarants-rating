@@ -16,7 +16,7 @@ use App\Http\Controllers\DashboardAdmin\RestaurantController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('RestaurantByUuid/{restaurant:uuid}', [RestaurantController::class, 'RestaurantByUuid']);
-Route::middleware(['checkUser:admin'])->group(function () {
+Route::middleware(['auth:sanctum', 'abilities:admin'])->group(function () {
     Route::apiResource('restaurant', RestaurantController::class);
     Route::post('storeRestaurantsByNumber', [RestaurantController::class, 'storeRestaurantsByNumber']);
     Route::post('generation', [GenerationController::class, 'store']);

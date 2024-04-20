@@ -4,6 +4,7 @@ namespace App\Http\Controllers\DashboardRestaurant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceRequest;
+use App\Http\Resources\RestaurantResource;
 use App\Interfaces\DashboardRestaurant\ServiceInterface;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class ServiceController extends Controller
      */
     public function store(ServiceRequest $request)
     {
-        $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id()], $request->validated());
+        $data = array_merge(['restaurant_id' => Auth::id()], $request->validated());
 
         return $this->service->storeService($data);
     }
@@ -67,7 +68,8 @@ class ServiceController extends Controller
      */
     public function update(ServiceRequest $request, Service $service)
     {
-        $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id()], $request->validated());
+
+        $data = array_merge(['restaurant_id' => Auth::user()->id], $request->validated());
 
         return $this->service->updateService($data, $service);
     }
@@ -85,29 +87,7 @@ class ServiceController extends Controller
      */
     public function a()
     {
-        return $node = Service::create([
-            'statement' => 'Foo',
+        return RestaurantResource::make(Auth::user());
 
-            'children' => [
-                [
-                    'statement' => 'Bar',
-                    'children' => [
-                        ['statement' => 'Baz'],
-                    ],
-                ],
-                [
-                    'statement' => 'Bar',
-                    'children' => [
-                        ['statement' => 'Baz'],
-                    ],
-                ],
-                [
-                    'statement' => 'Bar',
-                    'children' => [
-                        ['statement' => 'Baz'],
-                    ],
-                ],
-            ],
-        ]);
     }
 }

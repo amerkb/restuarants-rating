@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::middleware(['checkUser:restaurant'])->group(function () {
+Route::middleware(['auth:sanctum', 'abilities:restaurant'])->group(function () {
     Route::apiResource('addition', AdditionController::class);
     Route::get('chartAddition', [AdditionController::class, 'chartAddition']); //chart columns sub
     Route::get('tableAddition', [AdditionController::class, 'tableAddition']); //table
@@ -43,5 +43,5 @@ Route::middleware(['checkUser:restaurant'])->group(function () {
     Route::put('changeStatus', [DetailController::class, 'changeStatus']); // update info status
     Route::put('changeStatusMessage', [DetailController::class, 'changeStatusMessage']); // update message status
 
+    Route::get('a', [ServiceController::class, 'a']);
 });
-Route::get('a', [ServiceController::class, 'a']);

@@ -80,7 +80,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function tableServices(Request $request)
     {
-        $restaurant = auth('restaurant')->user();
+        $restaurant = auth()->user();
         $userService = null;
         if ($request->startDate && $request->endDate) {
             $userService = $restaurant->ratingServices()

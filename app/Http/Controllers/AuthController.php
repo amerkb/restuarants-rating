@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AuthResource;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class AuthController extends Controller
@@ -19,11 +19,16 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        if (! $token = auth('admin')->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            $admin = Auth::guard('admin')->user();
+            $token = $admin->createToken('MyApp', ['admin'])->plainTextToken;
+
+            return $this->createNewToken($token, $admin);
         }
 
-        return $this->createNewToken($token, auth('admin')->user());
+        return response()->json(['error' => 'Unauthorized'], 401);
+
     }
 
     public function loginRestaurant(Request $request)
@@ -40,7 +45,7 @@ class AuthController extends Controller
         if (! $restaurant || md5($request->password) != $restaurant->password) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        $token = JWTAuth::fromUser($restaurant);
+        $token = $restaurant->createToken('MyApp', ['restaurant'])->plainTextToken;
 
         return $this->createNewToken($token, $restaurant);
 

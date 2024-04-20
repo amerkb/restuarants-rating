@@ -35,7 +35,7 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
         $meals = AdditionResource::collection($meals);
 
         return ApiResponseHelper::sendResponseWithKey(
-            new Result($meals, 'Done'),['additionalStatus'=>boolval(Auth::user()->additionalStatus)]
+            new Result($meals, 'Done'), ['additionalStatus' => boolval(Auth::user()->additionalStatus)]
         );
     }
 
@@ -81,7 +81,7 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function tableAddition(Request $request)
     {
-        $restaurant = auth('restaurant')->user();
+        $restaurant = auth()->user();
         $userAdditions = null;
         if ($request->startDate && $request->endDate) {
             $userAdditions = $restaurant->ratingAdditions()

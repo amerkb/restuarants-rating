@@ -22,7 +22,7 @@ class BackgroundController extends Controller
      */
     public function store(ImageRequest $request)
     {
-        $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id(), 'background' => $request->file('image')]);
+        $data = array_merge(['restaurant_id' => Auth::id(), 'background' => $request->file('image')]);
 
         return $this->background->storeBackground($data);
     }
@@ -32,7 +32,7 @@ class BackgroundController extends Controller
      */
     public function show()
     {
-        $restaurantDetail = RestaurantDetail::findOrFail(Auth::guard('restaurant')->id());
+        $restaurantDetail = RestaurantDetail::findOrFail(Auth::id());
 
         return $this->background->showBackground($restaurantDetail);
     }
@@ -42,8 +42,8 @@ class BackgroundController extends Controller
      */
     public function update(ImageRequest $request)
     {
-        $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id(), 'background' => $request->file('image')]);
-        $restaurantDetail = RestaurantDetail::findOrFail(Auth::guard('restaurant')->id());
+        $data = array_merge(['restaurant_id' => Auth::id(), 'background' => $request->file('image')]);
+        $restaurantDetail = RestaurantDetail::findOrFail(Auth::id());
 
         return $this->background->updateBackground($data, $restaurantDetail);
     }
@@ -53,7 +53,7 @@ class BackgroundController extends Controller
      */
     public function destroy()
     {
-        $restaurantDetail = RestaurantDetail::findOrFail(Auth::guard('restaurant')->id());
+        $restaurantDetail = RestaurantDetail::findOrFail(Auth::id());
 
         return $this->background->deleteBackground($restaurantDetail);
     }

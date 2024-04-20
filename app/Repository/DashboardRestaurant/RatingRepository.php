@@ -11,7 +11,7 @@ class RatingRepository implements RatingInterface
 {
     public function getRating()
     {
-        $restaurant = auth('restaurant')->user();
+        $restaurant = auth()->user();
         $userService = $restaurant->ratingServices;
         $ratings = $userService->groupby('rating_id');
         $i = 0;

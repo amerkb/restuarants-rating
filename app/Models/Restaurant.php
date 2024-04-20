@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Restaurant extends Authenticatable implements JWTSubject
+class Restaurant extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected $guarded = 'restaurant';
 
     protected $fillable = ['name', 'password', 'uuid', 'messageStatus', 'additionalStatus', 'infoStatus', 'status'];
 
@@ -91,20 +92,5 @@ class Restaurant extends Authenticatable implements JWTSubject
 
         return number_format($avg, 2);
 
-    }
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return [];
     }
 }

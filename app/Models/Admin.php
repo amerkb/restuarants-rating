@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Admin extends Authenticatable implements JWTSubject
+class Admin extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -19,6 +18,8 @@ class Admin extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
+    protected $guarded = 'admin';
+
     protected $fillable = [
         'name',
         'email',
@@ -52,20 +53,5 @@ class Admin extends Authenticatable implements JWTSubject
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'users_services')->withPivot('rating');
-    }
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return [];
     }
 }

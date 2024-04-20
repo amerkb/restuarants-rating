@@ -22,7 +22,7 @@ class LogoController extends Controller
      */
     public function store(ImageRequest $request)
     {
-        $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id(), 'logo' => $request->file('image')]);
+        $data = array_merge(['restaurant_id' => Auth::id(), 'logo' => $request->file('image')]);
 
         return $this->logo->storeLogo($data);
     }
@@ -32,7 +32,7 @@ class LogoController extends Controller
      */
     public function show()
     {
-        $restaurantDetail = RestaurantDetail::findOrFail(Auth::guard('restaurant')->id());
+        $restaurantDetail = RestaurantDetail::findOrFail(Auth::id());
 
         return $this->logo->showLogo($restaurantDetail);
     }
@@ -42,8 +42,8 @@ class LogoController extends Controller
      */
     public function update(ImageRequest $request)
     {
-        $data = array_merge(['restaurant_id' => Auth::guard('restaurant')->id(), 'logo' => $request->file('image')]);
-        $restaurantDetail = RestaurantDetail::findOrFail(Auth::guard('restaurant')->id());
+        $data = array_merge(['restaurant_id' => Auth::id(), 'logo' => $request->file('image')]);
+        $restaurantDetail = RestaurantDetail::findOrFail(Auth::id());
 
         return $this->logo->updateLogo($data, $restaurantDetail);
 
@@ -54,7 +54,7 @@ class LogoController extends Controller
      */
     public function destroy()
     {
-        $restaurantDetail = RestaurantDetail::findOrFail(Auth::guard('restaurant')->id());
+        $restaurantDetail = RestaurantDetail::findOrFail(Auth::id());
 
         return $this->logo->deleteLogo($restaurantDetail);
 
