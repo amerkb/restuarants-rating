@@ -28,7 +28,7 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function getMeals()
     {
-        $meals = $this->where('restaurant_id',Auth::id())->get();
+        $meals = $this->where('restaurant_id', Auth::id())->get();
         foreach ($meals as $index => $meal) {
             $meal['idd'] = $index + 1;
         }
@@ -60,6 +60,10 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function updateMeal(array $dataAddition, Addition $addition)
     {
+        $result = $this->checkAdditionOwnership($addition);
+        if ($result) {
+            return $result;
+        }
         $addition = $this->updateById($addition->id, $dataAddition);
         $addition = AdditionResource::make($addition);
 
@@ -70,6 +74,10 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function deleteMeal(Addition $meal)
     {
+        $result = $this->checkAdditionOwnership($meal);
+        if ($result) {
+            return $result;
+        }
         File::delete(public_path($meal->image));
         $this->deleteById($meal->id);
 
@@ -137,8 +145,7 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function chartAddition()
     {
-        $additions =  $this->where('restaurant_id',Auth::id())->get();
-
+        $additions = $this->where('restaurant_id', Auth::id())->get();
 
         $additions = AdditionResource::collection($additions);
 
@@ -153,5 +160,18 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
         $restaurant->update(['additionalStatus' => ! $restaurant->additionalStatus]);
 
         return ApiResponseHelper::sendMessageResponse('update successfully');
+    }
+
+    public function checkAdditionOwnership($addition)
+    {
+        $restaurant = Auth::user();
+
+        if (! $restaurant->additions->contains('id', $addition->id)) {
+            return ApiResponseHelper::sendMessageResponse(
+                'You cannot delete this service',
+                403,
+                false
+            );
+        }
     }
 }

@@ -75,10 +75,13 @@ class Restaurant extends Authenticatable
         foreach ($services as $service) {
             $avg += $service->averageRating($service->id);
         }
-        $avg = $avg / count($services);
+        if ($services->isEmpty()) {
+            return number_format(0);
+        } else {
+            $avg = $avg / count($services);
 
-        return number_format($avg, 2);
-
+            return number_format($avg, 2);
+        }
     }
 
     public function scopeAvgAddition($query)
@@ -88,7 +91,11 @@ class Restaurant extends Authenticatable
         foreach ($additions as $addition) {
             $avg += $addition->averageRating();
         }
-        $avg = $avg / count($additions);
+        if ($additions->isEmpty()) {
+            return number_format(0);
+        } else {
+            $avg = $avg / count($additions);
+        }
 
         return number_format($avg, 2);
 

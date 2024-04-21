@@ -19,7 +19,7 @@ class UserRepository extends BaseRepositoryImplementation implements UserInterfa
         foreach ($data as $index => $datum) {
             $datum['id'] = $index + 1;
         }
-        $count = count($restaurant->users)??0;
+        $count = count($restaurant->users) ?? 0;
 
         return ApiResponseHelper::sendResponseWithKey(new Result($data), ['count' => $count, 'status' => boolval($restaurant->infoStatus)]);
 

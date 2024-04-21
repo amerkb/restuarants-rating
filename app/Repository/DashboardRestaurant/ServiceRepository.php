@@ -27,7 +27,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function getServices()
     {
-        $services = $this->where('restaurant_id',Auth::id())->get();
+        $services = $this->where('restaurant_id', Auth::id())->get();
         foreach ($services as $index => $service) {
             $service['idd'] = $index + 1;
         }
@@ -40,6 +40,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function showService(Service $service)
     {
+
         $service = ServiceResource::make($service);
 
         return ApiResponseHelper::sendResponse(
@@ -60,6 +61,11 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function updateService(array $dataService, Service $service)
     {
+        $result = $this->checkServiceOwnership($service);
+        if ($result) {
+            return $result;
+        }
+
         $service = $this->updateById($service->id, $dataService);
 
         $service = ServiceResource::make($service);
@@ -71,6 +77,10 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function deleteService(Service $service)
     {
+        $result = $this->checkServiceOwnership($service);
+        if ($result) {
+            return $result;
+        }
         $this->deleteById($service->id);
 
         return ApiResponseHelper::sendMessageResponse(
@@ -137,11 +147,24 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function chartService()
     {
-        $services =  $this->where('restaurant_id',Auth::id())->get();
+        $services = $this->where('restaurant_id', Auth::id())->get();
         $services = ServiceResource::collection($services);
 
         return ApiResponseHelper::sendResponse(
             new Result($services, 'Done')
         );
+    }
+
+    public function checkServiceOwnership($service)
+    {
+        $restaurant = Auth::user();
+
+        if (! $restaurant->services->contains('id', $service->id)) {
+            return ApiResponseHelper::sendMessageResponse(
+                'You cannot delete this service',
+                403,
+                false
+            );
+        }
     }
 }
