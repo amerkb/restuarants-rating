@@ -137,7 +137,8 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function chartAddition()
     {
-        $additions = $this->all();
+        $additions =  $this->where('restaurant_id',Auth::id())->get();
+
 
         $additions = AdditionResource::collection($additions);
 

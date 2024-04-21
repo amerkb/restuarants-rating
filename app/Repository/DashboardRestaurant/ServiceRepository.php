@@ -137,7 +137,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function chartService()
     {
-        $services = $this->all();
+        $services =  $this->where('restaurant_id',Auth::id())->get();
         $services = ServiceResource::collection($services);
 
         return ApiResponseHelper::sendResponse(

@@ -17,9 +17,19 @@ class RatingRepository extends BaseRepositoryImplementation implements RatingInt
     public function storeRating(RatingRequest $request)
     {
         try {
+            if (!isset($request->additions) && !isset($request->services)) {
+                return ApiResponseHelper::sendMessageResponse(
+                    'send data to rating', 422, false);
+            }
 
-            $user = null;
+                $user = null;
             $restaurant = Restaurant::where('uuid', $request->restaurant_uuid)->first();
+            if (!$restaurant) {
+                return ApiResponseHelper::sendMessageResponse(
+                    'send uuid right', 422, false);
+            }
+
+
             if ($request->phone && $request->name) {
                 $data = ['phone' => $request->phone, 'name' => $request->name];
                 $user = $this->updateOrCreate(['phone' => $request->phone, 'name' => $request->name], $data);

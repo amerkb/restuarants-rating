@@ -16,9 +16,12 @@ class UserRepository extends BaseRepositoryImplementation implements UserInterfa
         $this->with('users');
         $restaurant = $this->getById(auth()->id());
         $data = UserResource::collection($restaurant->users);
-        $count = count($restaurant->users);
+        foreach ($data as $index => $datum) {
+            $datum['id'] = $index + 1;
+        }
+        $count = count($restaurant->users)??0;
 
-        return ApiResponseHelper::sendResponseWithKey(new Result($data), ['count' => $count, 'status' => boolval($restaurant->status)]);
+        return ApiResponseHelper::sendResponseWithKey(new Result($data), ['count' => $count, 'status' => boolval($restaurant->infoStatus)]);
 
     }
 
