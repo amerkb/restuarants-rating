@@ -27,7 +27,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function getServices()
     {
-        $services = $this->all();
+        $services = $this->where('restaurant_id',Auth::id())->get();
         foreach ($services as $index => $service) {
             $service['idd'] = $index + 1;
         }

@@ -28,7 +28,7 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function getMeals()
     {
-        $meals = $this->get();
+        $meals = $this->where('restaurant_id',Auth::id())->get();
         foreach ($meals as $index => $meal) {
             $meal['idd'] = $index + 1;
         }
