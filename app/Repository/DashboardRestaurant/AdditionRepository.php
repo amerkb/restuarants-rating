@@ -130,6 +130,15 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
             $new[$k] = $parent;
             $new[$k]['children'] = $children;
         }
+        if ($request->order == 0) {
+            usort($new, function ($a, $b) {
+                return $a['rating'] - $b['rating'];
+            });
+        } elseif ($request->order == 1) {
+            usort($new, function ($a, $b) {
+                return $b['rating'] - $a['rating'];
+            });
+        }
         $data = TableResource::collection($new);
 
         return ApiResponseHelper::sendResponse(new Result($data, 'Done'));
