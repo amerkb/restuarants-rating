@@ -59,6 +59,11 @@ class RestaurantController extends Controller
         return $this->restaurant->showRestaurant($restaurant);
     }
 
+    public function getRestaurantsByAttribute(Request $request)
+    {
+        return $this->restaurant->getRestaurantsByAttribute($request);
+    }
+
     /*
      * Update the specified resource in storage.
      */

@@ -27,7 +27,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function getServices()
     {
-        $services = $this->where('restaurant_id', Auth::id())->get();
+        $services = $this->where('restaurant_id', Auth::id())->get()->toTree();
         foreach ($services as $index => $service) {
             $service['idd'] = $index + 1;
         }
@@ -50,8 +50,13 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function storeService(array $dataService)
     {
-
-        $service = $this->create($dataService);
+        $service = null;
+        if (isset($dataService['parent_id'])) {
+            $parent = $this->getById($dataService['parent_id']);
+            $service = $parent->children()->create($dataService);
+        } else {
+            $service = $this->create($dataService);
+        }
         $service = ServiceResource::make($service);
 
         return ApiResponseHelper::sendResponse(
@@ -95,10 +100,16 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
         if ($request->startDate && $request->endDate) {
             $userService = $restaurant->ratingServices()
                 ->whereBetween('users_services.created_at', [$request->startDate.' 00:00:00', $request->endDate.' 23:59:59'])
-                ->with(['service', 'rate', 'user'])->get();
+                ->with(['service', 'rate', 'user'])
+                ->whereHas('service', function ($query) {
+                    $query->whereNull('parent_id');
+                })->get();
         } else {
             $userService = $restaurant->ratingServices()
-                ->with(['service', 'rate', 'user'])->get();
+                ->with(['service', 'rate', 'user'])
+                ->whereHas('service', function ($query) {
+                    $query->whereNull('parent_id');
+                })->get();
         }
         $ratings = $userService->groupby('rating_id');
 
@@ -122,6 +133,70 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
             $k = $i - 1;
             $parent['idd'] = ''.$i.'';
             $parent['name'] = 'overall';
+            $parent['rating'] = $rate / count($rating);
+            $parent['date'] = $rating[0]->created_at->toDateTimeString();
+            $parent['userName'] = $rating[0]->user->name ?? null;
+            $parent['userPhone'] = $rating[0]->user->phone ?? null;
+            $parent['note'] = $rating[0]->rate->note ?? null;
+
+            $new[$k] = $parent;
+            $new[$k]['children'] = $children;
+        }
+        if ($request->order == 0) {
+            usort($new, function ($a, $b) {
+                return $a['rating'] - $b['rating'];
+            });
+        } elseif ($request->order == 1) {
+            usort($new, function ($a, $b) {
+                return $b['rating'] - $a['rating'];
+            });
+        }
+        $data = TableResource::collection($new);
+
+        return ApiResponseHelper::sendResponse(new Result($data, 'Done'));
+
+    }
+
+    public function tableServicesSubs(Request $request)
+    {
+        $restaurant = auth()->user();
+        $userService = null;
+        if ($request->startDate && $request->endDate) {
+            $userService = $restaurant->ratingServices()
+                ->whereBetween('users_services.created_at', [$request->startDate.' 00:00:00', $request->endDate.' 23:59:59'])
+                ->with(['service', 'rate', 'user'])
+                ->whereHas('service', function ($query) {
+                    $query->whereNotNull('parent_id');
+                })->get();
+        } else {
+            $userService = $restaurant->ratingServices()
+                ->with(['service', 'rate', 'user'])
+                ->whereHas('service', function ($query) {
+                    $query->whereNotNull('parent_id');
+                })->get();
+        }
+        $ratings = $userService->groupby('rating_id');
+
+        $i = 0;
+        $children = [];
+        $new = [];
+        $parent = null;
+
+        foreach ($ratings as $index => $rating) {
+            $i++;
+            $children = [];
+            $parent = null;
+            $rate = 0;
+
+            foreach ($rating as $key => $value) {
+                $value['idd'] = $i.'_'.$key + 1;
+                $children[$key] = $value;
+                $rate = $rate + $value->rating;
+
+            }
+            $k = $i - 1;
+            $parent['idd'] = ''.$i.'';
+            $parent['name'] =  'overall';
             $parent['rating'] = $rate / count($rating);
             $parent['date'] = $rating[0]->created_at->toDateTimeString();
             $parent['userName'] = $rating[0]->user->name ?? null;

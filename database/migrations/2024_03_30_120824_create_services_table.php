@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('restaurant_id')->constrained()->cascadeOnDelete();
             $table->string('statement');
+            $table->nestedSet();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

@@ -11,6 +11,8 @@ interface ServiceInterface
 
     public function tableServices(Request $request);
 
+    public function tableServicesSubs(Request $request);
+
     public function avgService();
 
     public function chartService();

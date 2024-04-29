@@ -17,6 +17,7 @@ class RatingRepository extends BaseRepositoryImplementation implements RatingInt
     public function storeRating(RatingRequest $request)
     {
         try {
+            DB::beginTransaction();
             if (! isset($request->additions) && ! isset($request->services)) {
                 return ApiResponseHelper::sendMessageResponse(
                     'send data to rating', 422, false);
@@ -70,9 +71,13 @@ class RatingRepository extends BaseRepositoryImplementation implements RatingInt
                 DB::table('users_services')->insert($services);
             }
 
+            DB::commit();
+
             return ApiResponseHelper::sendMessageResponse(
                 'add successfully');
         } catch (\Exception $e) {
+            DB::rollback();
+
             return ApiResponseHelper::sendMessageResponse(
                 $e->getMessage(), ApiResponseCodes::BAD_REQUEST, false);
         }

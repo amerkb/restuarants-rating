@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
+use Kalnoy\Nestedset\NodeTrait;
 
 class Service extends Model
 {
-    use HasFactory;
+    use HasFactory ,NodeTrait;
 
     protected $fillable = ['id', 'restaurant_id', 'statement', 'active'];
 

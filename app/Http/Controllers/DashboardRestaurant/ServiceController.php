@@ -35,6 +35,11 @@ class ServiceController extends Controller
         return $this->service->tableServices($request);
     }
 
+    public function tableServicesSubs(Request $request)
+    {
+        return $this->service->tableServicesSubs($request);
+    }
+
     public function chartService()
     {
         return $this->service->chartService();

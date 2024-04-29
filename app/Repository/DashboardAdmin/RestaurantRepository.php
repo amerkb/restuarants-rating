@@ -9,6 +9,7 @@ use App\ApiHelper\Result;
 use App\Http\Resources\RestaurantResource;
 use App\Interfaces\DashboardAdmin\RestaurantInterface;
 use App\Models\Restaurant;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -156,5 +157,31 @@ class RestaurantRepository extends BaseRepositoryImplementation implements Resta
         }
 
         // Replace 'A' with the desired column letter or adjust accordingly for multiple columns
+    }
+
+    public function getRestaurantsByAttribute(Request $request)
+    {
+
+        $restaurants = Restaurant::query()
+            ->when($request->category, function ($query) use ($request) {
+                $query->whereHas('restaurant_details', function ($query) use ($request) {
+                    $query->where('category', $request->category);
+                });
+            })
+            ->when($request->phone, function ($query) use ($request) {
+                $query->whereHas('restaurant_details', function ($query) use ($request) {
+                    $query->where('phone', $request->phone);
+                });
+            })
+            ->when($request->email, function ($query) use ($request) {
+                $query->whereHas('restaurant_details', function ($query) use ($request) {
+                    $query->where('email', $request->email);
+                });
+            })
+            ->get();
+        $restaurants = RestaurantResource::collection($restaurants);
+
+        return ApiResponseHelper::sendResponse(new Result($restaurants, 'done'));
+
     }
 }
