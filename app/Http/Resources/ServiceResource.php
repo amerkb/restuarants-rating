@@ -15,10 +15,7 @@ class ServiceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $parent=0;
-        if (Auth::check()) {
-        $parent = Auth::user()->parentService;
-    }
+        $parent = $this->restaurant->parentService;
         if (isset($this->children) && count($this->children) > 0) {
             return [
                 'id' => $this->idd ?? null,
@@ -27,8 +24,8 @@ class ServiceResource extends JsonResource
                 'available' => boolval($this->active),
                 'avg_rating' => isset($this->id) ? floatval($this->averageRating($this->id)) : null,
                 'created_at' => isset($this->created_at) ? $this->created_at->toDateTimeString() : null,
-                'edited' => false,
                 'parent' => $this->id == $parent ? true : false,
+                'edited' => false,
 //                'children' => ServiceResource::collection($this->children),
             ];
         } else {

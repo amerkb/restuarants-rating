@@ -37,8 +37,8 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
         }
         $services = AdditionResource::collection($services);
 
-        return ApiResponseHelper::sendResponse(
-            new Result($services, 'Done')
+        return ApiResponseHelper::sendResponseWithKey(
+            new Result($services, 'Done'),['additionalStatus' => boolval(Auth::user()->additionalStatus)]
         );
     }
 
