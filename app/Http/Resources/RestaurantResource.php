@@ -31,7 +31,7 @@ class RestaurantResource extends JsonResource
                 'endMessageCompany' => $this->restaurant_details->endMessage ?? null,
                 'logoCompany' => url($this->restaurant_details->logo ?? null),
                 'backgroundCompany' => url($this->restaurant_details->background ?? null),
-                'additions' => AdditionResource::collection($this->activeAddition()),
+                'additions' => ServiceResource::collection($this->activeServicesSub()),
                 'services' => ServiceResource::collection($this->activeServices()),
 
             ];

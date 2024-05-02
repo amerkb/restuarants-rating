@@ -44,7 +44,7 @@ class RatingRepository extends BaseRepositoryImplementation implements RatingInt
                     if (isset($addition['rating'])) {
                         $additions[$index] = [
                             'user_id' => $user,
-                            'addition_id' => $addition['id'],
+                            'service_id' => $addition['id'],
                             'rating' => $addition['rating'],
                             'created_at' => now(),
                             'rating_id' => $rating->id,
@@ -52,7 +52,7 @@ class RatingRepository extends BaseRepositoryImplementation implements RatingInt
                         ];
                     }
                 }
-                DB::table('users_additions')->insert($additions);
+                DB::table('users_services')->insert($additions);
             }
             if (isset($request->services)) {
                 $services = [];

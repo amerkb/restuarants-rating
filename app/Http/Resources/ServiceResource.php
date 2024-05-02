@@ -15,7 +15,10 @@ class ServiceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $parent=0;
+        if (Auth::check()) {
         $parent = Auth::user()->parentService;
+    }
         if (isset($this->children) && count($this->children) > 0) {
             return [
                 'id' => $this->idd ?? null,
@@ -26,7 +29,7 @@ class ServiceResource extends JsonResource
                 'created_at' => isset($this->created_at) ? $this->created_at->toDateTimeString() : null,
                 'edited' => false,
                 'parent' => $this->id == $parent ? true : false,
-                'children' => ServiceResource::collection($this->children),
+//                'children' => ServiceResource::collection($this->children),
             ];
         } else {
             return [

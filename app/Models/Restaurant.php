@@ -65,7 +65,11 @@ class Restaurant extends Authenticatable
 
     public function scopeActiveServices($query)
     {
-        return $this->services()->where('active', true)->get();
+        return $this->services()->where('active', true)->whereNull('parent_id')->get();
+    }
+    public function scopeActiveServicesSub($query)
+    {
+        return $this->services()->where('active', true)->whereNotNull('parent_id')->get();
     }
 
     public function users(): BelongsToMany
