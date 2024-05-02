@@ -64,15 +64,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function storeService(array $dataService)
     {
-        $service = null;
-        if (isset($dataService['isChildren']) && $dataService['isChildren']) {
-
-            $dataService['parent_id'] = Auth::user()->parentService;
-            $service = $this->create($dataService);
-
-        } else {
-            $service = $this->create($dataService);
-        }
+        $service = $this->create($dataService);
         $service = ServiceResource::make($service);
 
         return ApiResponseHelper::sendResponse(

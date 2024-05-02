@@ -3,6 +3,7 @@
 namespace App\Interfaces\DashboardRestaurant;
 
 use App\Models\Addition;
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 interface AdditionInterface
@@ -21,7 +22,7 @@ interface AdditionInterface
 
     public function changeStatusAdditional();
 
-    public function updateMeal(array $dataAddition, Addition $addition);
+    public function updateMeal(array $dataAddition, Service $service);
 
-    public function deleteMeal(Addition $meal);
+    public function deleteMeal(Service $service);
 }

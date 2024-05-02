@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdditionRequest;
 use App\Interfaces\DashboardRestaurant\AdditionInterface;
 use App\Models\Addition;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,20 +65,21 @@ class AdditionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(AdditionRequest $request, Addition $addition)
+    public function update(AdditionRequest $request,  $service)
     {
         $data = array_merge(['restaurant_id' => Auth::id()], $request->validated());
-
-        return $this->meal->updateMeal($data, $addition);
+        $service=  Service::find($service);
+        return $this->meal->updateMeal($data, $service);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Addition $addition)
+    public function destroy( $service)
     {
+        $service=  Service::find($service);
 
-        return $this->meal->deleteMeal($addition);
+        return $this->meal->deleteMeal($service);
 
     }
 

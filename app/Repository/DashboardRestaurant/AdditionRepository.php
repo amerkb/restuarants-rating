@@ -7,9 +7,12 @@ use App\ApiHelper\ApiResponseCodes;
 use App\ApiHelper\ApiResponseHelper;
 use App\ApiHelper\Result;
 use App\Http\Resources\AdditionResource;
+use App\Http\Resources\ChartServiceResource;
+use App\Http\Resources\ServiceResource;
 use App\Http\Resources\TableResource;
 use App\Interfaces\DashboardRestaurant\AdditionInterface;
 use App\Models\Addition;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -18,7 +21,7 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 {
     public function model()
     {
-        return Addition::class;
+        return Service::class;
     }
 
     public function getFilterItems($filter)
@@ -28,14 +31,14 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function getMeals()
     {
-        $meals = $this->where('restaurant_id', Auth::id())->get();
-        foreach ($meals as $index => $meal) {
-            $meal['idd'] = $index + 1;
+        $services = Service::where('restaurant_id', Auth::id())->whereNotNull('parent_id')->get();
+        foreach ($services as $index => $service) {
+            $service['idd'] = $index + 1;
         }
-        $meals = AdditionResource::collection($meals);
+        $services = AdditionResource::collection($services);
 
-        return ApiResponseHelper::sendResponseWithKey(
-            new Result($meals, 'Done'), ['additionalStatus' => boolval(Auth::user()->additionalStatus)]
+        return ApiResponseHelper::sendResponse(
+            new Result($services, 'Done')
         );
     }
 
@@ -50,21 +53,27 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function storeMeal(array $dataMeal)
     {
-        $meal = $this->create($dataMeal);
-        $meal = AdditionResource::make($meal);
 
+        $dataService['parent_id'] = Auth::user()->parentService;
+        $dataService['restaurant_id'] = Auth::id();
+        $dataService['statement'] =$dataMeal['name'];
+        $dataService['active'] =$dataMeal['active'];
+        $service = $this->create($dataService);
+        $service = AdditionResource::make($service);
         return ApiResponseHelper::sendResponse(
-            new Result($meal, 'Done'), ApiResponseCodes::CREATED
+            new Result($service, 'Done'), ApiResponseCodes::CREATED
         );
     }
 
-    public function updateMeal(array $dataAddition, Addition $addition)
+    public function updateMeal(array $dataAddition, Service $service)
     {
-        $result = $this->checkAdditionOwnership($addition);
+        $dataAddition['statement']=$dataAddition['name'];
+        $restaurant = Auth::user();
+        $result = $this->checkAdditionOwnership($service);
         if ($result) {
             return $result;
         }
-        $addition = $this->updateById($addition->id, $dataAddition);
+        $addition = $this->updateById($service->id, $dataAddition);
         $addition = AdditionResource::make($addition);
 
         return ApiResponseHelper::sendResponse(
@@ -72,14 +81,13 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
         );
     }
 
-    public function deleteMeal(Addition $meal)
+    public function deleteMeal(Service $service)
     {
-        $result = $this->checkAdditionOwnership($meal);
+        $result = $this->checkAdditionOwnership($service);
         if ($result) {
             return $result;
         }
-        File::delete(public_path($meal->image));
-        $this->deleteById($meal->id);
+        $this->deleteById($service->id);
 
         return ApiResponseHelper::sendMessageResponse(
             'deleted successfully'
@@ -90,16 +98,22 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
     public function tableAddition(Request $request)
     {
         $restaurant = auth()->user();
-        $userAdditions = null;
+        $userService = null;
         if ($request->startDate && $request->endDate) {
-            $userAdditions = $restaurant->ratingAdditions()
-                ->whereBetween('users_additions.created_at', [$request->startDate.' 00:00:00', $request->endDate.' 23:59:59'])
-                ->with(['addition', 'rate', 'user'])->get();
+            $userService = $restaurant->ratingServices()
+                ->whereBetween('users_services.created_at', [$request->startDate.' 00:00:00', $request->endDate.' 23:59:59'])
+                ->with(['service', 'rate', 'user'])
+                ->whereHas('service', function ($query) {
+                    $query->whereNotNull('parent_id');
+                })->get();
         } else {
-            $userAdditions = $restaurant->ratingAdditions()
-                ->with(['addition', 'rate', 'user'])->get();
+            $userService = $restaurant->ratingServices()
+                ->with(['service', 'rate', 'user'])
+                ->whereHas('service', function ($query) {
+                    $query->whereNotNull('parent_id');
+                })->get();
         }
-        $ratings = $userAdditions->groupby('rating_id');
+        $ratings = $userService->groupby('rating_id');
 
         $i = 0;
         $children = [];
@@ -142,6 +156,7 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
         $data = TableResource::collection($new);
 
         return ApiResponseHelper::sendResponse(new Result($data, 'Done'));
+
     }
 
     public function avgAddition()
@@ -154,12 +169,12 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
 
     public function chartAddition()
     {
-        $additions = $this->where('restaurant_id', Auth::id())->get();
+        $services = Service::where('restaurant_id', Auth::id())->whereNotNull('parent_id')->get();
 
-        $additions = AdditionResource::collection($additions);
+        $services = ChartServiceResource::collection($services);
 
         return ApiResponseHelper::sendResponse(
-            new Result($additions, 'Done')
+            new Result($services, 'Done')
         );
     }
 
@@ -171,11 +186,10 @@ class AdditionRepository extends BaseRepositoryImplementation implements Additio
         return ApiResponseHelper::sendMessageResponse('update successfully');
     }
 
-    public function checkAdditionOwnership($addition)
+    public function checkAdditionOwnership($service)
     {
         $restaurant = Auth::user();
-
-        if (! $restaurant->additions->contains('id', $addition->id)) {
+        if (! $restaurant->services->contains('id', $service->id)) {
             return ApiResponseHelper::sendMessageResponse(
                 'You cannot delete this service',
                 403,

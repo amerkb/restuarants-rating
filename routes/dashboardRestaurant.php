@@ -23,6 +23,7 @@ Route::middleware(['auth:sanctum', 'abilities:restaurant'])->group(function () {
     Route::get('chartAddition', [AdditionController::class, 'chartAddition']); //chart columns sub
     Route::get('tableAddition', [AdditionController::class, 'tableAddition']); //table
     Route::get('avgAddition', [AdditionController::class, 'avgAddition']); //qvg
+
     Route::put('changeStatusAdditional', [AdditionController::class, 'changeStatusAdditional']); // update Additional status
     Route::apiResource('service', ServiceController::class);
     Route::get('getServicesSub', [ServiceController::class, 'getServicesSub']); //chart columns services
