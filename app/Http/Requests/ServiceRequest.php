@@ -25,7 +25,7 @@ class ServiceRequest extends FormRequest
             return [
                 'statement' => 'required|string',
                 'active' => 'sometimes|bool',
-                'parent_id' => 'sometimes|int|exists:services,id',
+                'isChildren' => 'sometimes|bool',
             ];
         } else {
             return [

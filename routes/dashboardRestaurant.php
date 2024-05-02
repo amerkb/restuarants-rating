@@ -25,10 +25,13 @@ Route::middleware(['auth:sanctum', 'abilities:restaurant'])->group(function () {
     Route::get('avgAddition', [AdditionController::class, 'avgAddition']); //qvg
     Route::put('changeStatusAdditional', [AdditionController::class, 'changeStatusAdditional']); // update Additional status
     Route::apiResource('service', ServiceController::class);
+    Route::get('getServicesSub', [ServiceController::class, 'getServicesSub']); //chart columns services
     Route::get('chartService', [ServiceController::class, 'chartService']); //chart columns services
+    Route::get('chartServiceSub', [ServiceController::class, 'chartServiceSub']); //chart columns services subs
     Route::get('tableServicesWithoutSub', [ServiceController::class, 'tableServicesWithoutSub']);
     Route::get('tableServicesWithSub', [ServiceController::class, 'tableServicesSubs']);
     Route::get('avgService', [ServiceController::class, 'avgService']); //avg
+    Route::put('changeParent', [ServiceController::class, 'changeParent']);
     Route::get('getUser', [UserController::class, 'getUser']); // user count status
     Route::get('logo', [LogoController::class, 'show']);
     Route::post('logo', [LogoController::class, 'store']);

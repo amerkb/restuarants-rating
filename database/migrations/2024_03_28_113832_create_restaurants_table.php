@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('infoStatus')->default(true);
             $table->boolean('messageStatus')->default(true);
             $table->boolean('additionalStatus')->default(true);
+            $table->integer('parentService')->default(0);
             $table->timestamps();
         });
     }

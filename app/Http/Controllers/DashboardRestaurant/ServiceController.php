@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\DashboardRestaurant;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangeParentRequest;
 use App\Http\Requests\ServiceRequest;
 use App\Http\Resources\RestaurantResource;
 use App\Interfaces\DashboardRestaurant\ServiceInterface;
@@ -35,6 +36,11 @@ class ServiceController extends Controller
         return $this->service->tableServices($request);
     }
 
+    public function getServicesSub()
+    {
+        return $this->service->getServicesSub();
+    }
+
     public function tableServicesSubs(Request $request)
     {
         return $this->service->tableServicesSubs($request);
@@ -43,6 +49,11 @@ class ServiceController extends Controller
     public function chartService()
     {
         return $this->service->chartService();
+    }
+
+    public function chartServiceSub()
+    {
+        return $this->service->chartServiceSub();
     }
 
     public function avgService()
@@ -58,6 +69,13 @@ class ServiceController extends Controller
         $data = array_merge(['restaurant_id' => Auth::id()], $request->validated());
 
         return $this->service->storeService($data);
+    }
+
+    public function changeParent(ChangeParentRequest $request)
+    {
+        $data = array_merge(['restaurant_id' => Auth::id()], $request->validated());
+
+        return $this->service->changeParent($data);
     }
 
     /**

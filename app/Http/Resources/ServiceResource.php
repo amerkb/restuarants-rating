@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceResource extends JsonResource
 {
@@ -14,6 +15,7 @@ class ServiceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $parent = Auth::user()->parentService;
         if (isset($this->children) && count($this->children) > 0) {
             return [
                 'id' => $this->idd ?? null,
@@ -23,6 +25,7 @@ class ServiceResource extends JsonResource
                 'avg_rating' => isset($this->id) ? floatval($this->averageRating($this->id)) : null,
                 'created_at' => isset($this->created_at) ? $this->created_at->toDateTimeString() : null,
                 'edited' => false,
+                'parent' => $this->id == $parent ? true : false,
                 'children' => ServiceResource::collection($this->children),
             ];
         } else {
@@ -33,6 +36,7 @@ class ServiceResource extends JsonResource
                 'available' => boolval($this->active),
                 'avg_rating' => isset($this->id) ? floatval($this->averageRating($this->id)) : null,
                 'created_at' => isset($this->created_at) ? $this->created_at->toDateTimeString() : null,
+                'parent' => $this->id == $parent ? true : false,
                 'edited' => false,
             ];
         }

@@ -6,6 +6,7 @@ use App\Abstract\BaseRepositoryImplementation;
 use App\ApiHelper\ApiResponseCodes;
 use App\ApiHelper\ApiResponseHelper;
 use App\ApiHelper\Result;
+use App\Http\Resources\ChartServiceResource;
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\TableResource;
 use App\Interfaces\DashboardRestaurant\ServiceInterface;
@@ -27,7 +28,20 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function getServices()
     {
-        $services = $this->where('restaurant_id', Auth::id())->get()->toTree();
+        $services = Service::with('children')->where('restaurant_id', Auth::id())->whereNull('parent_id')->get();
+        foreach ($services as $index => $service) {
+            $service['idd'] = $index + 1;
+        }
+        $services = ServiceResource::collection($services);
+
+        return ApiResponseHelper::sendResponse(
+            new Result($services, 'Done')
+        );
+    }
+
+    public function getServicesSub()
+    {
+        $services = Service::where('restaurant_id', Auth::id())->whereNotNull('parent_id')->get();
         foreach ($services as $index => $service) {
             $service['idd'] = $index + 1;
         }
@@ -51,9 +65,11 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
     public function storeService(array $dataService)
     {
         $service = null;
-        if (isset($dataService['parent_id'])) {
-            $parent = $this->getById($dataService['parent_id']);
-            $service = $parent->children()->create($dataService);
+        if (isset($dataService['isChildren']) && $dataService['isChildren']) {
+
+            $dataService['parent_id'] = Auth::user()->parentService;
+            $service = $this->create($dataService);
+
         } else {
             $service = $this->create($dataService);
         }
@@ -196,7 +212,7 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
             }
             $k = $i - 1;
             $parent['idd'] = ''.$i.'';
-            $parent['name'] =  'overall';
+            $parent['name'] = 'overall';
             $parent['rating'] = $rate / count($rating);
             $parent['date'] = $rating[0]->created_at->toDateTimeString();
             $parent['userName'] = $rating[0]->user->name ?? null;
@@ -231,8 +247,20 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
 
     public function chartService()
     {
-        $services = $this->where('restaurant_id', Auth::id())->get();
-        $services = ServiceResource::collection($services);
+        $services = Service::where('restaurant_id', Auth::id())->whereNull('parent_id')->get();
+
+        $services = ChartServiceResource::collection($services);
+
+        return ApiResponseHelper::sendResponse(
+            new Result($services, 'Done')
+        );
+    }
+
+    public function chartServiceSub()
+    {
+        $services = Service::where('restaurant_id', Auth::id())->whereNotNull('parent_id')->get();
+
+        $services = ChartServiceResource::collection($services);
 
         return ApiResponseHelper::sendResponse(
             new Result($services, 'Done')
@@ -250,5 +278,15 @@ class ServiceRepository extends BaseRepositoryImplementation implements ServiceI
                 false
             );
         }
+    }
+
+    public function changeParent($data)
+    {
+        $restaurant = Auth::user();
+        $restaurant->update(['parentService' => $data['parent_id']]);
+        Service::whereNotNull('parent_id')->update(['parent_id' => $data['parent_id']]);
+
+        return ApiResponseHelper::sendMessageResponse(
+            'Done');
     }
 }

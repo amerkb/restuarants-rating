@@ -9,13 +9,19 @@ interface ServiceInterface
 {
     public function getServices();
 
+    public function getServicesSub();
+
     public function tableServices(Request $request);
 
     public function tableServicesSubs(Request $request);
 
     public function avgService();
 
+    public function changeParent(array $data);
+
     public function chartService();
+
+    public function chartServiceSub();
 
     public function showService(Service $service);
 

@@ -17,7 +17,7 @@ class Restaurant extends Authenticatable
 
     protected $guarded = 'restaurant';
 
-    protected $fillable = ['name', 'password', 'uuid', 'messageStatus', 'additionalStatus', 'infoStatus', 'status'];
+    protected $fillable = ['name', 'password', 'uuid', 'parentService', 'messageStatus', 'additionalStatus', 'infoStatus', 'status'];
 
     protected $hidden = [
         'password',
@@ -56,6 +56,11 @@ class Restaurant extends Authenticatable
     public function services(): HasMany
     {
         return $this->hasMany(Service::class);
+    }
+
+    public function scopeGetParentService($builder)
+    {
+        return $this->services()->whereNotNull('parent_id')->where('parent_id', '!=', 0)->first();
     }
 
     public function scopeActiveServices($query)
